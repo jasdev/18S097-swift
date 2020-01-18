@@ -1,0 +1,240 @@
+\documentclass{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage{minted}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+
+\hypersetup{
+    colorlinks=true,
+    urlcolor=blue
+}
+
+\title{18.S097 PS1 (in Swift)}
+\author{Jasdev Singh}
+
+\begin{document}
+
+\maketitle
+
+\section*{Question 1.}
+
+
+(Assume \href{https://bow-swift.io}{Bow} is imported for all snippets.)
+
+\begin{enumerate}[label=(\alph*)]
+
+\item
+\begin{minted}{swift}
+func f(_ x: Int) -> Int {
+	x * x
+}
+
+func g(_ x: Int) -> Int {
+	x + 1
+}
+\end{minted}
+
+\item
+\begin{minted}{swift}
+let h = g >>> f
+h(2) // 9
+\end{minted}
+
+\item
+\begin{minted}{swift}
+let i = f >>> g
+i(2) // 5
+\end{minted}
+
+\end{enumerate}
+
+\section*{Question 2.}
+
+\begin{enumerate}[label=(\alph*)]
+
+\item
+$\textrm{Ob}(\textbf{2}) = \{1, 2\}$
+
+$\textbf{2}(1, 1) = \{\textrm{id}_{1}\}$
+
+$\textbf{2}(1, 2) = \{\textit{f}\}$
+
+$\textbf{2}(2, 1) = \emptyset$
+
+$\textbf{2}(2, 2) = \{\textrm{id}_{2}\}$
+
+Compositions: $\{f \circ \textrm{id}_{1}, \textrm{id}_{2} \circ f, \textrm{id}_{2} \circ f \circ \textrm{id}_{1}\}$
+
+Identity morphisms: $\{\textrm{id}_{1}, \textrm{id}_{2}\}$
+
+\item
+
+The unital law is held by way of $f \circ \textrm{id}_{1} = f$ and $\textrm{id}_{2} \circ f = f$. That is, taking either the identity morphism on 1 or on 2 before or after \textit{f}, respectively, is the same as only following \textit{f}.
+
+The associative law holds for the only triple composition—$\textrm{id}_{2} \circ f \circ \textrm{id}_{1}$—in that both $\textrm{id}_{2} \circ (f \circ \textrm{id}_{1})$ and $(\textrm{id}_{2} \circ f) \circ \textrm{id}_{1}$ result in the same path.
+
+\end{enumerate}
+
+\section*{Question 3.}
+
+It is! The “but no other morphisms” bit is key—it implies there isn’t a non-identity morphisms with the same domain and codomain in the category that $f \circ g$ or $g \circ f$ could be equal to.
+
+\section*{Question 4.}
+
+\begin{enumerate}[label=(\alph*)]
+
+\item Not satisfying the unit law implies that the identity morphisms in the category, when composed with a non-identity morphism (say, $f$), isn’t simply $f$. Which, implies that the category doesn’t have identity morphisms in the first place (and by extension, is not a category).
+
+\item A single object category with morphisms corresponding to division and the object being the set of rational numbers. It's unital in that we can divide by one, but the operation isn’t associative.
+
+\end{enumerate}
+
+\section*{Question 5.}
+
+\begin{enumerate}[label=(\alph*)]
+
+\item $(\mathbb{N}, +, 0)$ forms a monoid by way of $0$ acting as the unital element and associativity extending from the associativity of addition on the naturals.
+
+\item Denoting string concatenation as $+$, $(\textrm{List}_{\{0, 1\}}, +, [])$ forms a monoid. The unital law is held since $\forall a \in \textrm{List}_{\{0, 1\}}, a + [] = a = [] + a$. Moreover, concatenation of three strings $a, b, c \in \textrm{List}_{\{0, 1\}}, a + (b + c) = a + bc = abc = ab + c = (a  + b) + c$.
+
+\item Every monoid gives rise to a single object category by the following procedure:
+    \begin{enumerate}[label=-]
+        \item First, treat the underlying set of the monoid, say $M$, as the object.
+        \item Map each member $m \in M$ to a morphism in $\textrm{Mor}(M, M)$. In doing so, there will be a morphism corresponding to the unital element of the monoid acting as the identity arrow. And, for each nonzero member of the monoid, $n$, following its corresponding arrow in the category represents $+ n$ in the underlying monoid.
+        \item This construction allows for compositions to be represented by repeated applications of the monoid’s operator, from which associativity also follows. 
+    \end{enumerate}
+
+\end{enumerate}
+
+\section*{Question 6.}
+
+\begin{enumerate}[label=(\alph*)]
+
+\item $12$’s identity morphism is the only member of $\mathcal{P}(12, 12) = \{x \in \mathbb{N}_{\geq 1} \mid x * 12 = 12\} = \{1\}$.
+
+\item Given morphisms $x$ and $y$ such that $x: a \rightarrow b$ and $y: b \rightarrow c$, there exists positive integers $x_{1}$ and $x_{2}$ for which $b = x_{1} * a$ and $c = x_{2} * b$. Combining the equalities, we get $c = x_{2} * (x_{1} * a)$—and shuffling parentheses, $c = (x_{2} * {x_1}) * a$. $x_{2} * {x_1} \in \mathbb{N}$, so by the preorder’s construction, there exists a morphism $y \circ x$ serving as the composite.
+
+\item Unfortunately not. To see why, let’s allow $0$ into the category. Its self-hom-set (lets pretend that’s a term) is given by $\mathcal{P}(0, 0) = \{x \in \mathbb{N} \mid x * 0 = 0\} = \mathbb{N}$. This is already suspicious. $0$’s hom-set on itself isn’t a signleton \emph{or} the empty set.
+
+$0 \leq 0$ in the underlying preorder then corresponds to infinitely many identity arrows. Choosing two candidate identities, $\textrm{id}_{0}$ and $\textrm{id}_{0}^\prime$ where $\textrm{id}_{0} \neq \textrm{id}_{0}^\prime$:
+
+We then simultaneously have $\textrm{id}_{0}^\prime \circ \textrm{id}_{0} = \textrm{id}_{0}^\prime$ and $\textrm{id}_{0}^\prime \circ \textrm{id}_{0} = \textrm{id}_{0}$ by way of both candidates being identities. Further, leaning on associativity from the category,
+
+\begin{align*}
+    (\textrm{id}_{0}^\prime \circ \textrm{id}_{0}) \circ \textrm{id}_{0} &= \textrm{id}_{0}^\prime \circ (\textrm{id}_{0} \circ \textrm{id}_{0}) && \text{By associativity.} \\
+    \textrm{id}_{0} \circ \textrm{id}_{0} &= \textrm{id}_{0}^\prime \circ \textrm{id}_{0} && \text{(1).} \\
+    \textrm{id}_{0} &= \textrm{id}_{0}^\prime, \bot && \text{(2).}
+\end{align*}
+
+(1) Choosing $\textrm{id}_{0}$ for the left parentheses and reducing the set on the right.
+
+(2) Reducing further on the left and leaning on  $\textrm{id}_{0}$ being an identity on the right.
+
+A contradiction. Allowing $0$ into the monoid generates infinitely many unique identity morphisms for it and we showed that they all must coincide.
+
+\end{enumerate}
+
+\section*{Question 7.}
+
+\begin{align*}
+    (\textrm{AND True}) \textrm{ False} &= \textrm{True False True} && \\
+    &= (\lambda y.\textrm{False}) \textrm{ True} && \\
+    &= \textrm{False}
+\end{align*}
+
+\begin{align*}
+    (\textrm{OR False}) \textrm{ True} &= \textrm{False False True} \\
+    &= (\lambda y.y) \textrm{ True} \\
+    &= \textrm{True}
+\end{align*}
+
+\section*{Question 8.}
+
+\begin{align*}
+    Y g &= (\lambda x.g(xx))(\lambda x.g(xx)) \\
+    &= g(\lambda x.g(xx))(\lambda x.g(xx)) \\
+    &= g(Y g) \\
+    &= g(\ldots g(Yg)\ldots) && \text{Recursing infinitely.}
+\end{align*}
+
+\section*{Question 9.}
+
+Taking the protocol witness-based approach covered in episodes 33–36 of \href{https://www.pointfree.co/episodes/ep33-protocol-witnesses-part-1}{Point-Free}:
+
+\begin{minted}[mathescape=true]{swift}
+struct Category<Object, Morphism> {
+	let domain: (Morphism) -> Object
+	let codomain: (Morphism) -> Object
+	let identity: (Object) -> Morphism
+	let compose: (Morphism) -> (Morphism) -> Morphism?
+}
+
+enum TwoObject {
+	case one, two
+}
+
+enum TwoMorphism {
+	case id1, f, id2
+}
+
+let twoCategoryWitness = Category<TwoObject, TwoMorphism>(
+	domain: { morphism in
+		switch morphism {
+		case .f:
+			return .one
+		case .id1:
+			return .one
+		case .id2:
+			return .two
+		}
+	},
+	codomain: { morphism in
+		switch morphism {
+		case .f:
+			return .two
+		case .id1:
+			return .one
+		case .id2:
+			return .two
+		}
+	},
+	identity: { object in
+		switch object {
+		case .one:
+			return .id1
+		case .two:
+			return .id2
+		}
+	}
+) { second in
+	{ first in
+		// Assuming `second $\circ$ first` order.
+		switch (second, first) {
+		case (.id1, .id1):
+			return .id1
+		case (.id1, .id2):
+			return nil
+		case (.id1, .f):
+			return nil
+		case (.f, .id1):
+			return .f
+		case (.f, .f):
+			return nil
+		case (.f, .id2):
+			return nil
+		case (.id2, .id2):
+			return .id2
+		case (.id2, .id1):
+			return nil
+		case (.id2, .f):
+			return .f
+		}
+	}
+}
+
+\end{minted}
+
+\end{document}
