@@ -183,9 +183,7 @@ enum TwoMorphism {
 let twoCategoryWitness = Category<TwoObject, TwoMorphism>(
 	domain: { morphism in
 		switch morphism {
-		case .f:
-			return .one
-		case .id1:
+		case .f, .id1:
 			return .one
 		case .id2:
 			return .two
@@ -193,11 +191,9 @@ let twoCategoryWitness = Category<TwoObject, TwoMorphism>(
 	},
 	codomain: { morphism in
 		switch morphism {
-		case .f:
-			return .two
 		case .id1:
 			return .one
-		case .id2:
+		case .id2, .f:
 			return .two
 		}
 	},
@@ -215,22 +211,12 @@ let twoCategoryWitness = Category<TwoObject, TwoMorphism>(
 		switch (second, first) {
 		case (.id1, .id1):
 			return .id1
-		case (.id1, .id2):
+		case (.id1, .id2), (.id1, .f), (.f, .f), (.f, .id2), (.id2, .id1):
 			return nil
-		case (.id1, .f):
-			return nil
-		case (.f, .id1):
+		case (.f, .id1), (.id2, .f):
 			return .f
-		case (.f, .f):
-			return nil
-		case (.f, .id2):
-			return nil
 		case (.id2, .id2):
 			return .id2
-		case (.id2, .id1):
-			return nil
-		case (.id2, .f):
-			return .f
 		}
 	}
 }
