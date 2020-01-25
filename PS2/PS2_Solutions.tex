@@ -22,7 +22,7 @@
 
 \section*{Acknowledgements.}
 
-\href{https://twitter.com/tomasruizlopez}{Tomás Ruiz-López} helped me get a better sense of Bow’s higher-kinded-type emulation in answering 2a.
+\href{https://twitter.com/tomasruizlopez}{Tomás Ruiz-López} helped me get a better sense of Bow’s higher-kinded-type emulation in answering 2b.
 
 \section*{Question 1.}
 
@@ -57,14 +57,83 @@ $K_1, K_2, K_3, F_1, F_2, F_3$ exhaust all possible structure preserving mapping
 
 \begin{enumerate}[label=(\alph*)]
 
-\item 
+\item $K_B$ preserves
 
-\item 
-(Assume \href{https://bow-swift.io}{Bow} is imported for all snippets.)
+\begin{enumerate}[label=-]
+        \item compositions, since $\forall S_1, S_2, S_3 \in \textbf{Obj}(\textbf{Set}) \textrm{ and } \forall f: S_1 \rightarrow S_2, \forall g: S_2 \rightarrow S_3, K_B(g \circ f) = \textrm{id}_B = \textrm{id}_B \circ \textrm{id}_B = K_B(g) \circ K_B(f)$.
+        \item identities, since $\forall S \in \textbf{Obj}(\textbf{Set}), K_B(\textrm{id}_S) = \textrm{id}_B = \textrm{id}_{K_B(S)}$.
+    \end{enumerate}
+
+\item Mirroring Bow’s approach to \href{https://bow-swift.io/docs/fp-concepts/higher-kinded-types/}{higher-kinded-type emulation} and with \texttt{boolConst} representing the constant functor on Swift’s \texttt{Bool} type.
+
+\begin{minted}{swift}
+class Kind<F, A> {
+	init() {}
+}
+
+final class ForConst {}
+final class ConstPartial<Constant>: Kind<ForConst, Constant> {}
+typealias ConstOf<Constant, Tag> = Kind<ConstPartial<Constant>, Tag>
+
+final class Const<Constant, Tag>: ConstOf<Constant, Tag> {
+	let constant: Constant
+
+	init(_ constant: Constant) {
+		self.constant = constant
+	}
+
+	static func fix(
+		_ fConstant: ConstOf<Constant, Tag>
+	) -> Const<Constant, Tag> {
+		fConstant as! Const<Constant, Tag>
+	}
+}
+
+postfix operator ^
+postfix func ^<Constant, Tag>(
+	_ fConstant: ConstOf<Constant, Tag>
+) -> Const<Constant, Tag> {
+	Const.fix(fConstant)
+}
+
+protocol Functor {
+	static func map<A, B>(
+		_ fA: Kind<Self, A>,
+		_ transform: (A) -> B
+	) -> Kind<Self, B>
+}
+
+extension ConstPartial: Functor {
+	static func map<OldTag, NewTag>(
+		_ fA: ConstOf<Constant, OldTag>,
+		_ transform: (OldTag) -> NewTag
+	) -> ConstOf<Constant, NewTag> {
+		Const(fA^.constant)
+	}
+}
+
+func boolConst<A>(_ constant: Bool) -> Const<Bool, A> {
+	Const(constant)
+}
+\end{minted}
 
 \end{enumerate}
 
 \section*{Question 3.}
+
+\begin{enumerate}[label=(\alph*)]
+
+\item
+
+\item
+
+\begin{minted}{swift}
+func diag<A>(_ a: A) -> (A, A) {
+	(a, a)
+}
+\end{minted}
+
+\end{enumerate}
 
 \section*{Question 4.}
 
