@@ -1,0 +1,79 @@
+\documentclass{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage{minted}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{indentfirst}
+
+\hypersetup{
+    colorlinks=true,
+    urlcolor=blue
+}
+
+\title{18.S097 PS2 (in Swift)}
+\author{Jasdev Singh}
+
+\begin{document}
+
+\maketitle
+
+\section*{Acknowledgements.}
+
+\href{https://twitter.com/tomasruizlopez}{Tomás Ruiz-López} helped me get a better sense of Bow’s higher-kinded-type emulation in answering 2a.
+
+\section*{Question 1.}
+
+Rephrased, Question 1 is asking for the cardinality of the objects in the functor category, $[\textbf{Set}, \textbf{3}]$, i.e. $|\textbf{Obj}([\textbf{Set}, \textbf{3}])|$. To start, we have three functors into $\textbf{3}$ at hand $K_1, K_2, K_3 \in \textbf{Obj}([\textbf{Set}, \textbf{3}])$ (borrowing notation from Question 2).
+
+In asking if there are any functors beyond these, we need to make an observation about $\textbf{Set}$’s hom-sets. $\forall S_1, S_2 \in \textbf{Obj}(\textbf{Set}), S_1 \neq \emptyset, S_2 \neq \emptyset: \textrm{Hom}(S_1, S_2) \neq \emptyset$. Home-sets in $\textbf{Set}$ are non-empty for all \textit{non-empty} set pairings. There will always be functions between them.
+Now, let's turn our attention to the empty set. Its self-hom-set only contains the identity morphism, $\textrm{id}_{\emptyset}$. And all of its originating hom-sets—$\textrm{Hom}(\emptyset, S)$ for $S \in \textbf{Obj}(\textbf{Set}), S \neq \emptyset$—are empty since there we can’t construct functions from non-empty sets into the empty set.
+
+We can lean on the above to make sure connections (morphisms) aren’t broken across our functors.
+
+Let’s make this more precise.
+
+The remaining functors need to map $\emptyset$ to an object in $\textbf{3}$ that \textit{only} has outbound morphisms. Then, all other objects in $\textbf{Set}$ must be mapped in the usual way. Listing out the steps for our next candidate functor $F_1$,
+
+\begin{enumerate}[label=(\alph*)]
+
+\item Map $\emptyset$ and $\textrm{id}_{\emptyset}$ to $1$ and $\textrm{id}_1$, respectively.
+
+\item Map all $\emptyset$-originating morphisms to $a$.
+
+\item Map all non-empty sets, their identities, and morphisms between non-empty sets to $2$ and $\textrm{id}_2$ (akin to $K_2$).
+
+\end{enumerate}
+
+We have some degrees of freedom in carrying out (a)–(c). That is, we can form another functor $F_2$ by, substituting in $2$ for all mentions of $1$ in (a). $b$ for $a$ in (b). And $3$ for all occurrences of $2$ in (c).
+
+Similarly, to form an $F_3$. Leave (a) as is. $b \circ a$ for $a$ in (b). And $3$ for all occurrences of $2$ in (c).
+
+$K_1, K_2, K_3, F_1, F_2, F_3$ exhaust all possible structure preserving mappings between $\textbf{Set}$ and $\textbf{3}$.
+
+\section*{Question 2.}
+
+\begin{enumerate}[label=(\alph*)]
+
+\item 
+
+\item 
+(Assume \href{https://bow-swift.io}{Bow} is imported for all snippets.)
+
+\end{enumerate}
+
+\section*{Question 3.}
+
+\section*{Question 4.}
+
+\section*{Question 5.}
+
+\section*{Question 6.}
+
+\section*{Question 7.}
+
+\section*{Question 8.}
+
+\end{document}
