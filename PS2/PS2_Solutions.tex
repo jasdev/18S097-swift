@@ -7,6 +7,9 @@
 \usepackage{amsfonts}
 \usepackage{amsmath}
 \usepackage{indentfirst}
+\usepackage[all,cmtip]{xy}
+\usepackage{mathtools}
+\usepackage{amssymb}
 
 \hypersetup{
     colorlinks=true,
@@ -123,7 +126,22 @@ func boolConst<A>(_ constant: Bool) -> Const<Bool, A> {
 
 \begin{enumerate}[label=(\alph*)]
 
-\item
+\item For $\delta$ to define a natural transformation, the following diagram must commute ($\forall f: X \rightarrow Y$ in $\textrm{Hom}(X, Y), \textrm{ with } X, Y \in \textbf{Obj}(\textbf{Set})$).
+
+\[\xymatrixcolsep{4pc}\xymatrix{
+X \ar[d]^{\delta_X} \ar[r]^f &Y\ar[d]^{\delta_Y}\\
+X \times X \ar[r]^{\textrm{Double}(f)}          &Y \times Y}
+\]
+
+Following the bottom path for an arbitrary $x \in X$,
+
+\[x \xmapsto{\delta_X} (x, x) \xmapsto{\textrm{Double}(f)} (f(x), f(x))\]
+
+And the upper,
+
+\[x \xmapsto{f} f(x) \xmapsto{\delta_Y} (f(x), f(x))\]
+
+Both paths are equivalent! $\delta$ is indeed a natural transformation between $\textrm{id}_{\textbf{Set}}$ and $\textrm{Double}$.
 
 \item
 
