@@ -7,7 +7,7 @@
 \usepackage{amsfonts}
 \usepackage{amsmath}
 \usepackage{indentfirst}
-\usepackage[all,cmtip]{xy}
+\usepackage[all]{xy}
 \usepackage{mathtools}
 \usepackage{amssymb}
 
@@ -25,7 +25,7 @@
 
 \section*{Acknowledgements.}
 
-\href{https://twitter.com/tomasruizlopez}{Tomás Ruiz-López} helped me get a better sense of Bow’s higher-kinded-type emulation in answering 2b. Also, in learning how to typeset diagrams, I referenced \href{https://twitter.com/mbrandonw}{Brandon Williams}’s \href{https://github.com/mbrandonw/my-math-notes}{graduate school notes}.
+\href{https://twitter.com/tomasruizlopez}{Tomás Ruiz-López} helped me get a better sense of Bow’s higher-kinded-type emulation in answering 2b. Also, while learning how to typeset diagrams, I referenced \href{https://twitter.com/mbrandonw}{Brandon Williams}’s \href{https://github.com/mbrandonw/my-math-notes}{graduate school notes}.
 
 \section*{Question 1.}
 
@@ -192,5 +192,28 @@ Their composites must also be in the containing category, and again leaning on t
 \section*{Question 7.}
 
 \section*{Question 8.}
+
+\begin{minted}{swift}
+enum Either<Left, Right> {
+	case left(Left)
+	case right(Right)
+}
+
+func bimap<Left, Right, NewLeft, NewRight>(
+	_ leftTransform: @escaping (Left) -> NewLeft,
+	_ rightTransform: @escaping (Right) -> NewRight
+)
+-> (Either<Left, Right>)
+-> Either<NewLeft, NewRight> {
+	{ either in
+		switch either {
+		case let .left(left):
+			return .left(leftTransform(left))
+		case let .right(right):
+			return .right(rightTransform(right))
+		}
+	}
+}
+\end{minted}
 
 \end{document}
