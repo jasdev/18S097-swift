@@ -25,7 +25,7 @@
 
 \section*{Acknowledgements.}
 
-\href{https://twitter.com/tomasruizlopez}{Tomás Ruiz-López} helped me get a better sense of Bow’s higher-kinded-type emulation in answering 2b.
+\href{https://twitter.com/tomasruizlopez}{Tomás Ruiz-López} helped me get a better sense of Bow’s higher-kinded-type emulation in answering 2b. Also, in learning how to typeset diagrams, I referenced \href{https://twitter.com/mbrandonw}{Brandon Williams}’s \href{https://github.com/mbrandonw/my-math-notes}{graduate school notes}.
 
 \section*{Question 1.}
 
@@ -128,6 +128,8 @@ func boolConst<A>(_ constant: Bool) -> Const<Bool, A> {
 
 \item For $\delta$ to define a natural transformation, the following diagram must commute ($\forall f: X \rightarrow Y$ in $\textrm{Hom}(X, Y), \textrm{ with } X, Y \in \textbf{Obj}(\textbf{Set})$).
 
+(Note, we can drop the $\textrm{id}_{\textbf{Set}}$ prefixes along the top row for $\textrm{id}_{\textbf{Set}}(X)$,  $\textrm{id}_{\textbf{Set}}(f)$, and $\textrm{id}_{\textbf{Set}}(Y)$ since the identity functor maps all objects and morphisms to themselves.)
+
 \[\xymatrixcolsep{4pc}\xymatrix{
 X \ar[d]^{\delta_X} \ar[r]^f &Y\ar[d]^{\delta_Y}\\
 X \times X \ar[r]^{\textrm{Double}(f)}          &Y \times Y}
@@ -154,6 +156,34 @@ func diag<A>(_ a: A) -> (A, A) {
 \end{enumerate}
 
 \section*{Question 4.}
+
+\begin{enumerate}[label=(\alph*)]
+
+\item Since $t, t'$ are both terminal objects, each have unique maps, say $u \textrm{ and } v$, to one another.
+
+\[\xymatrix{t \ar@{-->}@/^/[r]^{u} & t' \ar@{-->}@/^/[l]^{v}}\]
+
+Moreover, since the containing category must contain composite morphisms, $\textrm{Hom}(t, t)$ and $\textrm{Hom}(t', t')$ must contain $v \circ u$ and $u \circ v$, respectively. But, again leaning on their terminality, there can only be one endomorphism for each—their identities. This forces both compositions to cancel one another out, making $t \cong t'$.
+
+\item Mirroring the approach in (a), we lean on the product’s universal properties.
+
+That is, there exists unique morphisms between $p, p'$ that we’ll call $u$ and $v$.
+
+\[
+\xymatrix
+@C=1pc
+{
+	  & p' \ar@{-->}@/^/[d]^{u} \ar@/_1.5pc/[ddl]_{\pi_a'} \ar@/^1.5pc/[ddr]^{\pi_b'} \\
+	  & p \ar@{-->}@/^/[u]^{v} \ar[dl]_{\pi_a} \ar[dr]^{\pi_b} & \\
+	a & & b
+}
+\].
+
+Their composites must also be in the containing category, and again leaning on their universal properties, their must only be one endomorphism for each, that’re forced to be identities.
+
+\item It could! Each of these isomprhisms are forced by the \textit{uniqueness} of morphisms originating from or pointing towards the universal constructions at hand.
+
+\end{enumerate}
 
 \section*{Question 5.}
 
