@@ -25,7 +25,7 @@
 
 \section*{Acknowledgements.}
 
-\href{https://twitter.com/tomasruizlopez}{Tomás Ruiz-López} helped me get a better sense of Bow’s higher-kinded-type emulation in answering 2b. Also, while learning how to typeset diagrams, I referenced \href{https://twitter.com/mbrandonw}{Brandon Williams}’s \href{https://github.com/mbrandonw/my-math-notes}{graduate school notes}.
+\href{https://twitter.com/tomasruizlopez}{Tomás Ruiz-López} helped me get a better sense of Bow’s higher-kinded-type emulation in answering 2(b). Also, while learning how to typeset diagrams, I referenced \href{https://twitter.com/mbrandonw}{Brandon Williams}’s \href{https://github.com/mbrandonw/my-math-notes}{graduate school notes}.
 
 \section*{Question 1.}
 
@@ -187,30 +187,103 @@ Their composites must also be in the containing category, and again leaning on t
 
 \section*{Question 5.}
 
+\begin{enumerate}[label=(\alph*)]
+
+\item 3. It has projections towards both 42 and 27 in a way such at all other naturals with similar projects—namely, 1—has a unique morphism through 3. The product defines the greatest common divisor in this setting.
+
+\item $\{b, c\}$—this operation is set intersection.
+
+\item \texttt{false}—it has projections to itself and \texttt{true} in the category and there are no other candidate products for it to factorize. This binary operation is material implication, coinciding with the definition of the morphism in this setting.
+
+\end{enumerate}
+
 \section*{Question 6.}
 
+\begin{enumerate}[label=(\alph*)]
+
+\item \[\xymatrixcolsep{3pc}\xymatrix{\texttt{A} \times \texttt{B} \ar@/^1pc/[r]^{\texttt{swap}} & \texttt{B} \times \texttt{A} \ar@/^1pc/[l]^{\texttt{unswap}}}\]
+
+\begin{minted}{swift}
+func swap<A, B>(_ pair: (A, B)) -> (B, A) {
+	(pair.1, pair.0)
+}
+
+func unswap<A, B>(_ pair: (B, A)) -> (A, B) {
+	(pair.1, pair.0)
+}
+\end{minted}
+
+\texttt{swap} and \texttt{unswap} are inverses because their forward and backwards compositions leave inputs unchanged. That is, e.g. when grounding \texttt{A} and \texttt{B} with \texttt{Int} and \texttt{Bool}, \texttt{swapUnswap} and \texttt{unswapSwap} are equivalent to Swift’s identity function: \texttt{\{ \$0 \}}.
+
+\begin{minted}{swift}
+let swapUnswap: ((Int, Bool)) -> (Int, Bool) = swap >>> unswap
+let unswapSwap: ((Int, Bool)) -> (Int, Bool) = unswap >>> swap
+\end{minted}
+
+\item Replaying the approach in (a) with the following diagram and implementation (note, \texttt{Void} is Swift’s unit type),
+
+\[\xymatrixcolsep{3pc}\xymatrix{\texttt{A} \ar@/^1pc/[r]^{\texttt{unit}} & \texttt{Void} \times \texttt{A} \ar@/^1pc/[l]^{\texttt{ununit}}}\]
+
+\vfill
+
+\begin{minted}{swift}
+func unit<A>(_ value: A) -> ((), A) {
+	((), value)
+}
+
+func ununit<A>(_ pair: ((), A)) -> A {
+	pair.1
+}
+\end{minted}
+
+\item Once more,
+
+\[\xymatrixcolsep{3pc}\xymatrix{\texttt{A} \times (\texttt{B} \times \texttt{C}) \ar@/^1pc/[r]^{\texttt{assoc}} & (\texttt{A} \times \texttt{B}) \times \texttt{C} \ar@/^1pc/[l]^{\texttt{unassoc}}}\]
+
+\begin{minted}{swift}
+func assoc<A, B, C>(_ value: (A, (B, C))) -> ((A, B), C) {
+	((value.0, value.1.0), value.1.1)
+}
+
+func unassoc<A, B, C>(_ value: ((A, B), C)) -> (A, (B, C)) {
+	(value.0.0, (value.0.1, value.1))
+}
+\end{minted}
+
+\end{enumerate}
+
 \section*{Question 7.}
+
+We’ll approach this in two steps. First, let’s define projection functors down from $\mathcal{C} \times \mathcal{D}$ to $\mathcal{C}$ and $\mathcal{D}$.
+
+$\pi_{\mathcal{C}}$ takes an arbitrary object $(c, d) \in \textrm{Obj}(\mathcal{C} \times \mathcal{D})$ to $c$. And similarly, an arbitrary morphism in $\mathcal{C} \times \mathcal{D}$, say $(f, g)$, to $f$ in $\mathcal{C}$.
+
+$\pi_{\mathcal{D}}$ mirrors $\pi_{\mathcal{C}}$’s definition—focusing in on the $\mathcal{D}$ components of the product.
+
+We now need to show that for all other candidate products, $\mathcal{C} \times' \mathcal{D}$, there exists a unique morphism between $\mathcal{C} \times' \mathcal{D}$ and $\mathcal{C} \times \mathcal{D}$. Leaning on 4(b), the tho products must be isomorphic, and since their respective universal properties force a unique morphism between the two, we then shake out a unique morphism between the candidate product and the one posed in this problem.
+
+\vfill
 
 \section*{Question 8.}
 
 \begin{minted}{swift}
-enum Either<Left, Right> {
-	case left(Left)
-	case right(Right)
+enum Either<A, B> {
+	case left(A)
+	case right(B)
 }
 
-func bimap<Left, Right, NewLeft, NewRight>(
-	_ leftTransform: @escaping (Left) -> NewLeft,
-	_ rightTransform: @escaping (Right) -> NewRight
+func bimap<A, B, NewA, NewB>(
+	_ aTransform: @escaping (A) -> NewA,
+	_ bTransform: @escaping (B) -> NewB
 )
--> (Either<Left, Right>)
--> Either<NewLeft, NewRight> {
+-> (Either<A, B>)
+-> Either<NewA, NewB> {
 	{ either in
 		switch either {
-		case let .left(left):
-			return .left(leftTransform(left))
-		case let .right(right):
-			return .right(rightTransform(right))
+		case let .left(a):
+			return .left(aTransform(a))
+		case let .right(b):
+			return .right(bTransform(b))
 		}
 	}
 }
